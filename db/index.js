@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://sai123:LiHxLFuHDdulIhD8@task-man.lcbwb.mongodb.net/Blog_Generator')
+mongoose.connect('MOngoDB_Database Connect')
 .then((d)=>{
 
 console.log("connected")
