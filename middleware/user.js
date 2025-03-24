@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const zod = require('zod')
 const JWT_key= "my_secret_key";
-console.log(JWT_key)
 
 const zodSchema = zod.object({
     username: zod.string().email(),
