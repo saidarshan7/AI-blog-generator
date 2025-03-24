@@ -1,6 +1,11 @@
+const dotenv = require('dotenv').config({path: './.env'}) //when i used ../.env  it didn't worked but when i used  cd .. and ./.env it worked why ?
+
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb+srv://sai123:LiHxLFuHDdulIhD8@task-man.lcbwb.mongodb.net/Blog_Generator')
+
+
+
+mongoose.connect(process.env.MONGO_URI)
 .then((d)=>{
 
 console.log("connected")
@@ -16,13 +21,19 @@ const userSchema = new mongoose.Schema({
 })
 
 const blogSchema = new mongoose.Schema({
-  blogs : String  
+    title : String ,
+    blogs : String,
+    author: { type: Schema.Types.ObjectId, ref: 'User' }  
 })
 
 const User = mongoose.model('User',userSchema);
 const Blog = mongoose.model('Blog',blogSchema);
 
 module.exports = {
-    User,Blog
+    User,Blog,dotenv
 }
 
+
+
+// console.log(process.env.MONGO_URI)
+// console.log(process.env.API_Key)
