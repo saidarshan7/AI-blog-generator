@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema({
 const blogSchema = new mongoose.Schema({
     title : String ,
     blogs : String,
-    author: { type: Schema.Types.ObjectId, ref: 'User' }  
+    author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }  
 })
 
 const User = mongoose.model('User',userSchema);

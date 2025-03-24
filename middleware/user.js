@@ -16,8 +16,9 @@ function checkUser(req,res,next){
         username : req.body.username,
         password: req.body.password
     })
+      console.log(t)
     console.log(req.body.username)
-    console.log(t)
+    console.log(req.body.password)
 
     if (t.success){
         next();
@@ -40,8 +41,8 @@ function verifyToken(req,res,next){
         const token = req.headers.authorization.split(" ");
         
         let newToken = token[1]
-        // t console.log(token)oken = token.split(" ");
-        console.log(newToken)
+       
+        // console.log(newToken)
        
         const decode = jwt.verify(newToken,JWT_key)
 

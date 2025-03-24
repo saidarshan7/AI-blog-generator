@@ -34,14 +34,15 @@ route.post('/signin',checkUser, async(req,res)=>{
    const password = req.body.password;
 
 
-   const exist = User.findOne({
-username : username,
-password: password
+   const exists = User.findOne({
+ username,
+ password
     })
 
-    console.log(exist)
+    console.log(exists)  ///i want to return him  a userid alonh with  jwt token
 
-    if(exist){
+    if(exists){
+
 const token = jwt.sign(username,JWT_key)
      res.json({
         msg: token
@@ -57,7 +58,7 @@ const token = jwt.sign(username,JWT_key)
 })
 
 
-route.get('/blog',verifyToken,async (req,res)=>{
+route.get('/blog/add/:id',verifyToken,async (req,res)=>{
    // const input = req.body.input;
 
 
@@ -73,25 +74,63 @@ const topic = {
   const prompt = `Generate a high SEO-optimized blog for ${topic.audience} in a ${topic.tone} tone. The blog should be ${topic.description}. Include relevant keywords, proper subheadings (H1, H2, H3), and a word count of approximately 800-1000 words to boost search engine ranking. Ensure the content is engaging, well-structured, and provides value to the reader.`;
   
   const result = await model.generateContent(prompt)
-  const resp =   result.response.text()
+  const resp =  await result.response.text()
 
-  res.json({
-            title : topic.description,
-            body : resp
-        })
+  const userId = req.params.id;
+   
+       Blog.create({
+           title :topic.description,
+           blogs: resp,
+           author: userId
+       })
+       .then(()=>{
+           
+           res.json({
+               msg: "Blog Added Succesfuly ",
+               title : topic.description,
+               body : resp
+           })
+       })
+
+//   res.json({
+//             title : topic.description,
+//             body : resp
+//         })
 
 
 
 })
 
+// route.post('/add/:id',verifyToken,(req,res)=>{
+   
+    // const userId = req.params.id;
+   
+    //    Blog.create({
+    //        title :topic.description,
+    //        body: resp,
+    //        author: userId
+    //    })
+    //    .then(()=>{
+           
+    //        res.json({
+    //            msg: "Blog Added Succesfuly "
+    //        })
+    //    })
+   
+   
+//    })
+
 route.get('/myblogs/:id', verifyToken,async (req,res) =>{
 
     userId = req.params.id;
     try {
-        const r = await  Blog.find({ author: userId }).select('title body author ').populate('author','name'); // populate means it will link the author table from blogs to user table and brings all the information about users now here i said bring only name from the user table [populate('author','name')] slect is same as sql query
+        const r = await  Blog.find({ author: userId }).select('title'); // populate means it will link the author table from blogs to user table and brings all the information about users now here i said bring only name from the user table [populate('author','name')] slect is same as sql query
    
-        console.log(r)
+       
         res.json({
+             
+            your_blogs : r
+
 
         })
 
@@ -104,23 +143,7 @@ route.get('/myblogs/:id', verifyToken,async (req,res) =>{
 
 })
 
-route.post('/add/:id',verifyToken,(req,res)=>{
-   
- const userId = req.params.id;
 
-    Blog.create({
-        title :topic.description,
-        body: resp,
-        author: userId
-    })
-    .then(()=>{
-        res.json({
-            msg: "Blog Added Succesfuly "
-        })
-    })
-
-
-})
 
 module.exports= route
 
