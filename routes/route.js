@@ -58,7 +58,7 @@ const token = jwt.sign(username,JWT_key)
 })
 
 
-route.get('/blog/add/:id',verifyToken,async (req,res)=>{
+route.get('/blog',verifyToken,async (req,res)=>{
    // const input = req.body.input;
 
 
@@ -76,21 +76,14 @@ const topic = {
   const result = await model.generateContent(prompt)
   const resp =  await result.response.text()
 
-  const userId = req.params.id;
-   
-       Blog.create({
-           title :topic.description,
-           blogs: resp,
-           author: userId
-       })
-       .then(()=>{
+
            
            res.json({
                msg: "Blog Added Succesfuly ",
                title : topic.description,
                body : resp
            })
-       })
+    
 
 //   res.json({
 //             title : topic.description,
@@ -101,24 +94,24 @@ const topic = {
 
 })
 
-// route.post('/add/:id',verifyToken,(req,res)=>{
+route.post('/add/:id',verifyToken,(req,res)=>{
    
-    // const userId = req.params.id;
+    const userId = req.params.id;
    
-    //    Blog.create({
-    //        title :topic.description,
-    //        body: resp,
-    //        author: userId
-    //    })
-    //    .then(()=>{
+       Blog.create({
+           title :topic.description,
+           body: resp,
+           author: userId
+       })
+       .then(()=>{
            
-    //        res.json({
-    //            msg: "Blog Added Succesfuly "
-    //        })
-    //    })
+           res.json({
+               msg: "Blog Added Successfuly "
+           })
+       })
    
    
-//    })
+   })
 
 route.get('/myblogs/:id', verifyToken,async (req,res) =>{
 
@@ -140,6 +133,26 @@ route.get('/myblogs/:id', verifyToken,async (req,res) =>{
 
    
      
+
+})
+
+route.delete('/myblog/delete/:id',verifyToken,(req,res)=>{
+    const blogId = req.params.id;
+    const userId = req.body.id;
+
+    try {
+    const result = Blog.findOneAndDelete({author: userId ,_id :blogId})
+         result.then(()=>{
+            res.json({
+                msg: "Blog is DELETED!!!!!!!"
+            })
+         })
+    } catch (error) {
+        res.status(404).json({
+            msg : "blog not found"
+        })
+    }
+
 
 })
 
