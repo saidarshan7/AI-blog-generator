@@ -23,7 +23,8 @@ const response= await User.create({
 })
 
 res.status(200).json({
-    msg: "registered Succsessfull!!"
+    msg: "registered Succsessfull!!",
+    val:true
 })
 
 
@@ -45,7 +46,10 @@ route.post('/signin',checkUser, async(req,res)=>{
 
 const token = jwt.sign(username,JWT_key)
      res.json({
-        msg: token
+        msg: token,
+        username:username,
+        val:true
+
         // userId:
      })
     } else {
@@ -61,8 +65,6 @@ const token = jwt.sign(username,JWT_key)
 route.get('/blog',verifyToken,async (req,res)=>{
    // const input = req.body.input;
 
-
-
    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
 const topic = {
@@ -75,23 +77,15 @@ const topic = {
   
   const result = await model.generateContent(prompt)
   const resp =  await result.response.text()
+   
 
 
-           
            res.json({
                msg: "Blog Added Succesfuly ",
                title : topic.description,
                body : resp
            })
     
-
-//   res.json({
-//             title : topic.description,
-//             body : resp
-//         })
-
-
-
 })
 
 route.post('/add/:id',verifyToken,(req,res)=>{
@@ -112,6 +106,11 @@ route.post('/add/:id',verifyToken,(req,res)=>{
    
    
    })
+
+
+
+
+
 
 route.get('/myblogs/:id', verifyToken,async (req,res) =>{
 
